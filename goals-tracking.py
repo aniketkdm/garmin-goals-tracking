@@ -39,7 +39,7 @@ def main():
         print("Unknown error occurred during Garmin Connect Client login")
         quit()
 
-    activities = get_activities(client, 0, 1)
+    activities = get_activities_by_date(client, "2020-06-09")
 
     i = 0
     for activity in activities:
@@ -63,12 +63,14 @@ def set_user(email, password):
     return client
 
 
-def get_activities(client, start, end):
+# date format is yyyy-mm-dd
+def get_activities_by_date(client, date):
     """
     Get activities data
     """
     try:
-        activities = client.get_activities(start, end)  # 0=start, 1=limit
+        client.get
+        activities = client.get_activities_by_date(date)
         """print(activities)"""
     except (
         GarminConnectConnectionError,
