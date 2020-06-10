@@ -13,8 +13,8 @@ from datetime import date
 """
 Enable debug logging
 """
-#import logging
-# logging.basicConfig(level=logging.DEBUG)
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
 today = date.today()
 
