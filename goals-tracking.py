@@ -41,10 +41,13 @@ def main():
 
     activities = get_activities_by_date(client, '2020-06-09')
 
+    print(type(activities))
+
     i = 0
     for activity in activities:
         i += 1
-        print("activity "+str(i)+":"+str(activity))
+        print("activity "+str(i)+":"+str(activity["activityName"]))
+        print(type(activity))
 
 
 def set_user(email, password):
