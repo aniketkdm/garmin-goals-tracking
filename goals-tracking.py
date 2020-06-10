@@ -13,8 +13,8 @@ from datetime import date
 """
 Enable debug logging
 """
-import logging
-logging.basicConfig(level=logging.DEBUG)
+# import logging
+# logging.basicConfig(level=logging.DEBUG)
 
 today = date.today()
 
@@ -39,7 +39,7 @@ def main():
         print("Unknown error occurred during Garmin Connect Client login")
         quit()
 
-    activities = get_activities_by_date(client, "2020-06-09")
+    activities = get_activities_by_date(client, '2020-06-09')
 
     i = 0
     for activity in activities:
@@ -69,9 +69,7 @@ def get_activities_by_date(client, date):
     Get activities data
     """
     try:
-        client.get
         activities = client.get_activities_by_date(date)
-        """print(activities)"""
     except (
         GarminConnectConnectionError,
         GarminConnectAuthenticationError,
