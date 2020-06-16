@@ -9,7 +9,7 @@ from garminconnect import (
 
 from datetime import date
 from os import getenv
-
+import datetime
 
 """
 Enable debug logging
@@ -47,15 +47,24 @@ def main():
         print("Unknown error occurred during Garmin Connect Client login")
         quit()
 
-    activities = get_activities_by_date(client, '2020-06-09')
+    mondayThisWeek = datetime.datetime.today(
+    ) - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
 
-    print(type(activities))
+    activities = get_activities_by_date(client, str(mondayThisWeek))
 
+    # print(type(activities)) # list[dict]
+    m = dict()
     i = 0
     for activity in activities:
         i += 1
-        print("activity "+str(i)+":"+str(activity["activityName"]))
-        print(type(activity))
+        # print("activity "+str(i)+":"+str(activity["activityName"]))
+        exercise = activity["activityName"]
+        if exercise in m:
+            m[exercise] = m[exercise] + 1
+        else:
+            m[exercise] = 1
+        # print(type(activity)) # dict
+    print(m)
 
 
 def set_user(email, password):
@@ -89,20 +98,18 @@ def get_activities_by_date(client, date):
         print("Error occurred during Garmin Connect Client get activities: %s" % err)
         quit()
     except Exception:  # pylint: disable=broad-except
-        print("Unknown error occurred during Garmin Connect Client get activities")
+        print(
+            "Unknown error occurred during Garmin Connect Client get activities: %s" % err)
         quit()
     return activities
 
 
 def getCreds():
-    print("email: %s, password: %s", getenv("EMAIL"), getenv("PASSWORD"))
     if getenv("EMAIL") == None or getenv("PASSWORD") == None:
         raise EnvironmentError("EMAIL and PASSWORD expected as ENV variables")
 
     u = getenv("EMAIL")
     p = getenv("PASSWORD")
-
-    print("email: %s, password: %s", u, p)
 
     return set_user(u, p)
 
