@@ -9,7 +9,9 @@ from garminconnect import (
 
 from datetime import date
 from os import getenv
+from slack_webhook import Slack
 import datetime
+import json
 
 """
 Enable debug logging
@@ -21,6 +23,8 @@ today = date.today()
 
 
 def main():
+    slack = Slack(url='https://hooks.slack.com/services/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')
+
     try:
         client = getCreds()
     except (
@@ -47,16 +51,14 @@ def main():
         print("Unknown error occurred during Garmin Connect Client login")
         quit()
 
-    mondayThisWeek = datetime.datetime.today(
-    ) - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
+    mondayThisWeek = datetime.datetime.today() - datetime.timedelta(days=datetime.datetime.today().weekday() % 7)
 
     activities = get_activities_by_date(client, str(mondayThisWeek))
+    # activities = get_activities_by_date(client, '2020-06-08')
 
     # print(type(activities)) # list[dict]
     m = dict()
-    i = 0
     for activity in activities:
-        i += 1
         # print("activity "+str(i)+":"+str(activity["activityName"]))
         exercise = activity["activityName"]
         if exercise in m:
@@ -65,6 +67,7 @@ def main():
             m[exercise] = 1
         # print(type(activity)) # dict
     print(m)
+    slack.post(text=json.dumps(m))
 
 
 def set_user(email, password):
