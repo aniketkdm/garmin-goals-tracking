@@ -23,7 +23,7 @@ today = date.today()
 
 
 def main():
-    slack = Slack(url='https://hooks.slack.com/services/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')
+    slack = Slack(url=getenv("WEBHOOK"))
 
     try:
         client = getCreds()
