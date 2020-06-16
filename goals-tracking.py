@@ -8,6 +8,7 @@ from garminconnect import (
 )
 
 from datetime import date
+from os import getenv
 
 
 """
@@ -20,7 +21,14 @@ today = date.today()
 
 
 def main():
-    client = set_user("aniketkdm@gmail.com", "ShriGanesha_17")
+    try:
+        client = getCreds()
+    except (
+        EnvironmentError
+    ) as err:
+        print("Error during setting up connection: %s" % err)
+        quit()
+
     """
     Login to Garmin Connect portal
     Only needed at start of your program
@@ -84,6 +92,19 @@ def get_activities_by_date(client, date):
         print("Unknown error occurred during Garmin Connect Client get activities")
         quit()
     return activities
+
+
+def getCreds():
+    print("email: %s, password: %s", getenv("EMAIL"), getenv("PASSWORD"))
+    if getenv("EMAIL") == None or getenv("PASSWORD") == None:
+        raise EnvironmentError("EMAIL and PASSWORD expected as ENV variables")
+
+    u = getenv("EMAIL")
+    p = getenv("PASSWORD")
+
+    print("email: %s, password: %s", u, p)
+
+    return set_user(u, p)
 
 
 if __name__ == "__main__":
